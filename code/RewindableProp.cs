@@ -19,21 +19,21 @@ namespace rewind
 
 			if ( RewindGame.Mode == RewindMode.Gameplay )
 			{
-				Fragments.Push( new RewindFragment(this) );
-				
+				Fragments.Push( new RewindFragment( this ) );
+
 				// TODO: Handle more fragments than MAX_FRAGMENT_COUNT
 			}
-			else if (RewindGame.Mode == RewindMode.Rewind)
+			else if ( RewindGame.Mode == RewindMode.Rewind )
 			{
 				if ( Fragments.TryPop( out var fragment ) )
 				{
-					ApplyFragment( fragment );
+					this.ApplyFragment( fragment );
 
 					this.lastFragment = fragment;
 				}
 				else
 				{
-					ApplyFragment( this.lastFragment );
+					this.ApplyFragment( this.lastFragment );
 				}
 			}
 		}

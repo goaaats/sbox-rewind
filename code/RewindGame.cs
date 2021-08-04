@@ -1,16 +1,8 @@
-﻿
-using Sandbox;
-using Sandbox.UI.Construct;
+﻿using Sandbox;
 using System;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using rewind;
 using rewind.UI;
 
-//
-// You don't need to put things in a namespace, but it doesn't hurt.
-//
 namespace rewind
 {
 	[Library]
@@ -51,18 +43,10 @@ namespace rewind
 		{
 			if ( IsServer )
 			{
-				Log.Info( "My Gamemode Has Created Serverside!" );
-				
 				new RewindHudEntity();
 			}
-
-			if ( IsClient )
-			{
-				Log.Info( "My Gamemode Has Created Clientside!" );
-				
-			}
 		}
-		
+
 		private static void NotifyStateChange( RewindMode mode )
 		{
 			if ( mode == RewindMode.Rewind )
@@ -74,38 +58,42 @@ namespace rewind
 				ConsoleSystem.Run( "host_timescale", 1.0f );
 			}
 
-			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
+			foreach ( var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>() )
 			{
-				entity.UpdateRewindState(mode);
+				entity.UpdateRewindState( mode );
 			}
 		}
 
-		[Event("tick")]
+		[Event( "tick" )]
 		private void Tick()
 		{
 			if ( IsClient )
 			{
-				foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
+				foreach ( var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>() )
 				{
 					entity.RewindTick();
 				}
 			}
 		}
-		
+
 		public override void FrameSimulate( Client cl )
 		{
 			prevDeltaTimes[curTrackedIndex] = Time.Delta;
 			curTrackedIndex++;
 			if ( curTrackedIndex > TrackedDeltaTimes - 1 )
+			{
 				curTrackedIndex = 0;
-			
+			}
+
 			DebugOverlay.ScreenText( 6, "MinCnt: " + GetMinRewindableSimulates() );
 			DebugOverlay.ScreenText( 7, $"MinSec: {GetMinRewindableSeconds():00.0} / {GetMaxRewindableSeconds():00.0} " );
 			DebugOverlay.ScreenText( 8, $"SmoothDeltaTime: {SmoothDeltaTime}" );
 			DebugOverlay.ScreenText( 9, $"RewindTimescale: {RewindTimescale}" );
-			
-			if (Mode == RewindMode.Rewind)
+
+			if ( Mode == RewindMode.Rewind )
+			{
 				ConsoleSystem.Run( "host_timescale", RewindTimescale );
+			}
 
 			base.FrameSimulate( cl );
 		}
@@ -113,15 +101,19 @@ namespace rewind
 		public static int GetMinRewindableSimulates()
 		{
 			var highest = 0;
-			
-			foreach (var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>())
+
+			foreach ( var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>() )
 			{
 				// Let's ignore entities with more fragments than our max for now, until we can sort this out
 				if ( entity.Fragments.Count > MAX_TRACKED_FRAGMENTS )
+				{
 					continue;
-				
+				}
+
 				if ( entity.Fragments.Count > highest )
+				{
 					highest = entity.Fragments.Count;
+				}
 			}
 
 			return highest;

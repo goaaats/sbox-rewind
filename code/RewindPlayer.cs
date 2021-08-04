@@ -8,7 +8,7 @@ namespace rewind
 		public override void Respawn()
 		{
 			this.SetModel( "models/citizen/citizen.vmdl" );
-			
+
 			Controller = new WalkController();
 			Animator = new StandardPlayerAnimator();
 			Camera = new RewindCamera();
@@ -115,16 +115,9 @@ namespace rewind
 		public override void Simulate( Client cl )
 		{
 			base.Simulate( cl );
-
-			//
-			// If you have active children (like a weapon etc) you should call this to 
-			// simulate those too.
-			//
+			
 			this.SimulateActiveChild( cl, ActiveChild );
-
-			//
-			// If we're running serverside and Attack1 was just pressed, spawn a ragdoll
-			//
+			
 			if ( RewindGame.Mode == RewindMode.Gameplay )
 			{
 				if ( IsClient && Input.Down( InputButton.Attack1 ) )
@@ -145,7 +138,7 @@ namespace rewind
 					ragdoll.PhysicsGroup.Velocity = EyeRot.Forward * 1000;
 				}
 			}
-			
+
 			if ( IsClient && Input.Pressed( InputButton.Attack2 ) )
 			{
 				RewindGame.Mode = RewindMode.Rewind;

@@ -15,41 +15,36 @@ namespace rewind
 
 		public void RewindTick()
 		{
-			var debugPos = GetBoneTransform( 0 ).Position;
-			DebugOverlay.Text( debugPos, 0, $"Fragments: {Fragments.Count}", Color.White );
-			DebugOverlay.Text( debugPos, 2, $"Physics: {PhysicsEnabled}", Color.White );
+			var debugPos = this.GetBoneTransform( 0 ).Position;
+			//DebugOverlay.Text( debugPos, 0, $"Fragments: {Fragments.Count}", Color.White );
 
 			if ( RewindGame.Mode == RewindMode.Gameplay )
 			{
 				var frag = new RewindFragment( this );
 				frag.SaveBones( this );
-				
-				Fragments.Push( frag );
-				
-				// TODO: Handle more fragments than MAX_FRAGMENT_COUNT
-				
-				DebugOverlay.Text( debugPos, 1, "Gameplay", Color.Gray );
-			}
-			else if (RewindGame.Mode == RewindMode.Rewind)
-			{
-				DebugOverlay.Text( debugPos, 1, "Rewind", Color.Red );
 
+				Fragments.Push( frag );
+
+				// TODO: Handle more fragments than MAX_FRAGMENT_COUNT
+			}
+			else if ( RewindGame.Mode == RewindMode.Rewind )
+			{
 				if ( Fragments.TryPop( out var fragment ) )
 				{
-					ApplyFragment( fragment );
+					this.ApplyFragment( fragment );
 
 					this.lastFragment = fragment;
 				}
 				else
 				{
-					ApplyFragment( this.lastFragment );
+					this.ApplyFragment( this.lastFragment );
 				}
 			}
 		}
 
 		public void UpdateRewindState( RewindMode mode )
 		{
-			switch (mode)
+			switch ( mode )
 			{
 				case RewindMode.Gameplay:
 					//PhysicsEnabled = true;
@@ -68,10 +63,10 @@ namespace rewind
 			EyePos = fragment.EyePos;
 			Rotation = fragment.Rotation;
 			Velocity = fragment.Velocity;
-			
-			for (var i = 0; i < fragment.Bones.Length; i++)
+
+			for ( var i = 0; i < fragment.Bones.Length; i++ )
 			{
-				SetBoneTransform( i, fragment.Bones[i] );
+				this.SetBoneTransform( i, fragment.Bones[i] );
 			}
 		}
 	}
