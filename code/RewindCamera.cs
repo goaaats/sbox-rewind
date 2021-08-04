@@ -38,7 +38,7 @@ namespace rewind
 				Pos = center;
 				Rot = Rotation.FromAxis( Vector3.Up, 4 ) * Input.Rotation;
 
-				float distance = 165.0f * pawn.Scale;
+				float distance = 170.0f * pawn.Scale;
 				targetPos = Pos + Input.Rotation.Right * ((pawn.CollisionBounds.Maxs.x + 15) * pawn.Scale);
 				targetPos += Input.Rotation.Forward * -distance;
 			}
