@@ -136,24 +136,27 @@ namespace rewind
 			//
 			// If we're running serverside and Attack1 was just pressed, spawn a ragdoll
 			//
-			if ( IsClient && Input.Down( InputButton.Attack1 ) )
+			if ( RewindGame.Mode == RewindMode.Gameplay )
 			{
-				var ent = new RewindableProp {Position = EyePos + EyeRot.Forward * 50, Rotation = EyeRot};
+				if ( IsClient && Input.Down( InputButton.Attack1 ) )
+				{
+					var ent = new RewindableProp {Position = EyePos + EyeRot.Forward * 50, Rotation = EyeRot};
 
-				ent.SetModel( "models/citizen_props/crate01.vmdl" );
-				ent.Velocity = EyeRot.Forward * 1000;
+					ent.SetModel( "models/citizen_props/crate01.vmdl" );
+					ent.Velocity = EyeRot.Forward * 1000;
+				}
+
+				if ( IsClient && Input.Pressed( InputButton.Flashlight ) )
+				{
+					var ragdoll = new RewindableModelEntity();
+					ragdoll.SetModel( "models/citizen/citizen.vmdl" );
+					ragdoll.Position = EyePos + EyeRot.Forward * 40;
+					ragdoll.Rotation = Rotation.LookAt( Vector3.Random.Normal );
+					ragdoll.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
+					ragdoll.PhysicsGroup.Velocity = EyeRot.Forward * 1000;
+				}
 			}
-
-			if ( IsClient && Input.Pressed( InputButton.Flashlight ) )
-			{
-				var ragdoll = new RewindableModelEntity();
-				ragdoll.SetModel( "models/citizen/citizen.vmdl" );
-				ragdoll.Position = EyePos + EyeRot.Forward * 40;
-				ragdoll.Rotation = Rotation.LookAt( Vector3.Random.Normal );
-				ragdoll.SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
-				ragdoll.PhysicsGroup.Velocity = EyeRot.Forward * 1000;
-			}
-
+			
 			if ( IsClient && Input.Pressed( InputButton.Attack2 ) )
 			{
 				RewindGame.Mode = RewindMode.Rewind;
