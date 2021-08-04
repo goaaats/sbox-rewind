@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using rewind;
+using rewind.UI;
 
 //
 // You don't need to put things in a namespace, but it doesn't hurt.
@@ -71,9 +72,9 @@ namespace rewind
 			if ( curTrackedIndex > TrackedDeltaTimes - 1 )
 				curTrackedIndex = 0;
 			
-			DebugOverlay.ScreenText( 0, "MinCnt: " + GetMinRewindableSimulates() );
-			DebugOverlay.ScreenText( 1, $"MinSec: {GetMinRewindableSeconds():00.0} / {GetMaxRewindableSeconds():00.0} " );
-			DebugOverlay.ScreenText( 2, $"SmoothDeltaTime: {SmoothDeltaTime}" );
+			DebugOverlay.ScreenText( 6, "MinCnt: " + GetMinRewindableSimulates() );
+			DebugOverlay.ScreenText( 7, $"MinSec: {GetMinRewindableSeconds():00.0} / {GetMaxRewindableSeconds():00.0} " );
+			DebugOverlay.ScreenText( 8, $"SmoothDeltaTime: {SmoothDeltaTime}" );
 
 			base.FrameSimulate( cl );
 		}

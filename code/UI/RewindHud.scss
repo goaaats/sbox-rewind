@@ -1,0 +1,32 @@
+
+
+text.title
+{
+	font-family: Poppins;
+	font-size: 50px;
+	font-weight: 900;
+	color: white;
+	position: absolute;
+	left: 100px;
+	top: 100px;
+	text-shadow: 5px 5px 50px rgba( black, 0.8 );
+}
+
+.infocontainer
+{
+	font-family: Poppins;
+	
+	background-color: rgba(29, 32, 40, 0.45);
+	backdrop-filter: blur(10px);
+	flex-direction: column;
+	color: white;
+	font-size: 16px;
+	
+	width: 12%;
+	height: 9%;
+	
+	margin: 1%;
+	padding: 14px;
+	
+	border-radius: 10px;
+}
