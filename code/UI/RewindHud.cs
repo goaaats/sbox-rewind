@@ -39,7 +39,7 @@ namespace rewind.UI
 		[Event( "tick" )]
 		private void Tick()
 		{
-			this.rewindPanel.SetClass( "nodisplay", RewindGame.Mode == RewindMode.Gameplay );
+			this.rewindPanel?.SetClass( "nodisplay", RewindGame.Mode == RewindMode.Gameplay );
 		}
 	}
 
