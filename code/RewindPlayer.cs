@@ -3,26 +3,15 @@ using Sandbox;
 
 namespace rewind
 {
-	internal class MinimalPlayer : Player
+	internal class RewindPlayer : Player
 	{
 		public override void Respawn()
 		{
 			this.SetModel( "models/citizen/citizen.vmdl" );
-
-			//
-			// Use WalkController for movement (you can make your own PlayerController for 100% control)
-			//
+			
 			Controller = new WalkController();
-
-			//
-			// Use StandardPlayerAnimator  (you can make your own PlayerAnimator for 100% control)
-			//
 			Animator = new StandardPlayerAnimator();
-
-			//
-			// Use ThirdPersonCamera (you can make your own Camera for 100% control)
-			//
-			Camera = new ThirdPersonCamera();
+			Camera = new RewindCamera();
 
 			EnableAllCollisions = true;
 			EnableDrawing = true;
