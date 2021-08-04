@@ -30,11 +30,7 @@ namespace rewind
 			if ( IsServer )
 			{
 				Log.Info( "My Gamemode Has Created Serverside!" );
-
-				// Create a HUD entity. This entity is globally networked
-				// and when it is created clientside it creates the actual
-				// UI panels. You don't have to create your HUD via an entity,
-				// this just feels like a nice neat way to do it.
+				
 				new RewindHudEntity();
 			}
 
@@ -68,7 +64,7 @@ namespace rewind
 		{
 			var highest = 0;
 			
-			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
+			foreach (var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>())
 			{
 				if ( entity.Fragments.Count > highest )
 					highest = entity.Fragments.Count;
@@ -87,10 +83,7 @@ namespace rewind
 		{
 			return SmoothDeltaTime * MAX_TRACKED_FRAGMENTS;
 		}
-
-		/// <summary>
-		/// A client has joined the server. Make them a pawn to play with
-		/// </summary>
+		
 		public override void ClientJoined( Client client )
 		{
 			base.ClientJoined( client );
