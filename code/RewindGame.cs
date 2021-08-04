@@ -16,8 +16,26 @@ namespace rewind
 	public partial class RewindGame : Sandbox.Game
 	{
 		public const int MAX_TRACKED_FRAGMENTS = 5000;
-		public static RewindMode Mode { get; set; } = RewindMode.Gameplay;
 
+		private static RewindMode modeInternal = RewindMode.Gameplay;
+
+		public static RewindMode Mode
+		{
+			get => modeInternal;
+			set
+			{
+				modeInternal = value;
+				NotifyStateChange( value );
+			}
+		}
+
+		private static void NotifyStateChange( RewindMode mode )
+		{
+			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
+			{
+				entity.UpdateRewindState(mode);
+			}
+		}
 
 		private const int TrackedDeltaTimes = 100;
 		private static float[] prevDeltaTimes = new float[TrackedDeltaTimes];
@@ -45,7 +63,7 @@ namespace rewind
 		{
 			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
 			{
-				entity.UpdateRewindState();
+				entity.RewindSimulate();
 			}
 
 			prevDeltaTimes[curTrackedIndex] = Time.Delta;

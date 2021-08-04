@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using rewind;
 using Sandbox;
@@ -12,10 +13,10 @@ namespace rewind
 
 		private RewindFragment lastFragment;
 
-		public void UpdateRewindState()
+		public void RewindSimulate()
 		{
-			DebugOverlay.Text( EyePos, 0, $"Fragments: {Fragments.Count}", Color.White );
-			DebugOverlay.Text( EyePos, 2, $"Physics: {PhysicsEnabled}", Color.White );
+			//DebugOverlay.Text( EyePos, 0, $"Fragments: {Fragments.Count}", Color.White );
+			//DebugOverlay.Text( EyePos, 2, $"Physics: {PhysicsEnabled}", Color.White );
 			
 
 			//for (var i = 0; i < this.fragments.Count; i++)
@@ -29,19 +30,15 @@ namespace rewind
 			if ( RewindGame.Mode == RewindMode.Gameplay )
 			{
 				Fragments.Push( new RewindFragment(this) );
-				PhysicsEnabled = true;
-				//EnableAllCollisions = true;
 
 				//if ( this.fragments.Count > MAX_TRACKED_FRAGMENTS )
 				//	this.fragments.Dequeue();
 				
-				DebugOverlay.Text( EyePos, 1, "Gameplay", Color.Gray );
+				//DebugOverlay.Text( EyePos, 1, "Gameplay", Color.Gray );
 			}
 			else if (RewindGame.Mode == RewindMode.Rewind)
 			{
-				DebugOverlay.Text( EyePos, 1, "Rewind", Color.Red );
-				PhysicsEnabled = false;
-				//EnableAllCollisions = false;
+				//DebugOverlay.Text( EyePos, 1, "Rewind", Color.Red );
 
 				if ( Fragments.TryPop( out var fragment ) )
 				{
@@ -53,6 +50,25 @@ namespace rewind
 				{
 					ApplyFragment( this.lastFragment );
 				}
+			}
+		}
+
+		public void UpdateRewindState( RewindMode mode )
+		{
+			switch ( mode )
+			{
+				case RewindMode.Gameplay:
+					PhysicsEnabled = true;
+					EnableAllCollisions = true;
+					EnableTouch = true;
+					break;
+				case RewindMode.Rewind:
+					PhysicsEnabled = false;
+					EnableAllCollisions = false;
+					EnableTouch = false;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException( nameof(mode), mode, null );
 			}
 		}
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using rewind;
 using Sandbox;
@@ -12,7 +13,7 @@ namespace rewind
 
 		public Stack<RewindFragment> Fragments { get; set; } = new(RewindGame.MAX_TRACKED_FRAGMENTS + 1);
 
-		public void UpdateRewindState()
+		public void RewindSimulate()
 		{
 			var debugPos = GetBoneTransform( 0 ).Position;
 			DebugOverlay.Text( debugPos, 0, $"Fragments: {Fragments.Count}", Color.White );
@@ -24,14 +25,12 @@ namespace rewind
 				frag.SaveBones( this );
 				
 				Fragments.Push( frag );
-				PhysicsEnabled = true;
-
+				
 				DebugOverlay.Text( debugPos, 1, "Gameplay", Color.Gray );
 			}
 			else if (RewindGame.Mode == RewindMode.Rewind)
 			{
 				DebugOverlay.Text( debugPos, 1, "Rewind", Color.Red );
-				PhysicsEnabled = false;
 
 				if ( Fragments.TryPop( out var fragment ) )
 				{
@@ -43,6 +42,21 @@ namespace rewind
 				{
 					ApplyFragment( this.lastFragment );
 				}
+			}
+		}
+
+		public void UpdateRewindState( RewindMode mode )
+		{
+			switch (mode)
+			{
+				case RewindMode.Gameplay:
+					PhysicsEnabled = true;
+					break;
+				case RewindMode.Rewind:
+					PhysicsEnabled = false;
+					break;
+				default:
+					throw new ArgumentOutOfRangeException( nameof(mode), mode, null );
 			}
 		}
 

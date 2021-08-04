@@ -6,6 +6,8 @@ namespace rewind
 	{
 		public Stack<RewindFragment> Fragments { get; set; } 
 		
-		public void UpdateRewindState();
+		public void RewindSimulate();
+
+		public void UpdateRewindState( RewindMode mode );
 	}
 }

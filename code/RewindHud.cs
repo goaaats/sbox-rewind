@@ -15,7 +15,7 @@ namespace rewind
 		{
 			if ( IsClient )
 			{
-				RootPanel.SetTemplate( "/minimalhud.html" );
+				RootPanel.SetTemplate( "/rewindhud.html" );
 			}
 		}
 	}
