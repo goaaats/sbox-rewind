@@ -18,9 +18,9 @@ namespace rewind
 	{
 		public const int MAX_TRACKED_FRAGMENTS = 5000;
 		
-		private const float MAX_SECONDS_UNTIL_FULL_SPEED = 4f;
+		private const float MAX_SECONDS_UNTIL_FULL_SPEED = 1.3f;
 		private const float MIN_TIMESCALE = 0.1f;
-		private const float MAX_TIMESCALE = 1.0f;
+		private const float MAX_TIMESCALE = 1.1f;
 
 		private static RewindMode modeInternal = RewindMode.Gameplay;
 
