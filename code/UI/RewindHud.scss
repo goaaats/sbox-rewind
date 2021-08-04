@@ -30,3 +30,47 @@ text.title
 	
 	border-radius: 10px;
 }
+
+.rewindcontainer
+{
+	width: 20%;
+	height: 20%;
+
+	left: 70%;
+	
+	//background-color: #00ff90;
+	
+	& .rewindbg {
+		position: absolute;
+		
+		width: 100%;
+		height: 100%;
+
+		transition: all 0.1s ease-in;
+		
+		background-repeat: no-repeat;
+		background-image-tint: rgba(0, 0, 0, 0.35);
+	}
+	
+	& .rewindprogress {
+		position: absolute;
+		
+		width: 100%;
+		height: 100%;
+
+		overflow: hidden;
+		
+		& .rewindprogressimg {
+			background-image: url('/ui/rewind.png');
+			width: 100%;
+			height: 100%;
+			
+			background-repeat: no-repeat;
+		}
+	}
+}
+
+.nodisplay {
+	display: none;
+}
+

@@ -41,23 +41,6 @@ namespace rewind
 			}
 		}
 
-		private static void NotifyStateChange( RewindMode mode )
-		{
-			if ( mode == RewindMode.Rewind )
-			{
-				rewindingSince = DateTimeOffset.Now;
-			}
-			else
-			{
-				ConsoleSystem.Run( "host_timescale", 1.0f );
-			}
-
-			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
-			{
-				entity.UpdateRewindState(mode);
-			}
-		}
-
 		private const int TrackedDeltaTimes = 100;
 		private static float[] prevDeltaTimes = new float[TrackedDeltaTimes];
 		private static  int curTrackedIndex = 0;
@@ -79,13 +62,29 @@ namespace rewind
 				
 			}
 		}
+		
+		private static void NotifyStateChange( RewindMode mode )
+		{
+			if ( mode == RewindMode.Rewind )
+			{
+				rewindingSince = DateTimeOffset.Now;
+			}
+			else
+			{
+				ConsoleSystem.Run( "host_timescale", 1.0f );
+			}
+
+			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
+			{
+				entity.UpdateRewindState(mode);
+			}
+		}
 
 		[Event("tick")]
 		private void Tick()
 		{
 			if ( IsClient )
 			{
-				Log.Info( "TICK" );
 				foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
 				{
 					entity.RewindSimulate();

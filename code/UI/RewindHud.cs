@@ -1,4 +1,5 @@
-﻿using Sandbox.UI;
+﻿using Sandbox;
+using Sandbox.UI;
 using Sandbox.UI.Construct;
 
 //
@@ -12,6 +13,9 @@ namespace rewind.UI
 	/// </summary>
 	public partial class RewindHudEntity : Sandbox.HudEntity<RootPanel>
 	{
+		private Panel rewindPanel;
+		private Panel rewindProgress;
+		
 		public RewindHudEntity()
 		{
 			if ( IsClient )
@@ -24,7 +28,18 @@ namespace rewind.UI
 				tutorial.Add.Label( "Right click to rewind" );
 				tutorial.Add.Label( "F to shoot ragdoll" );
 				tutorial.Add.Label( "E to clear" );
+
+				this.rewindPanel = RootPanel.Add.Panel( "rewindcontainer" );
+				this.rewindPanel.Add.Image( "/ui/rewind.png", "rewindbg" );
+				//this.rewindProgress = this.rewindPanel.Add.Panel( "rewindprogress" );
+				//this.rewindProgress.Add.Panel( "rewindprogressimg" );
 			}
+		}
+
+		[Event( "tick" )]
+		private void Tick()
+		{
+			this.rewindPanel.SetClass( "nodisplay", RewindGame.Mode == RewindMode.Gameplay );
 		}
 	}
 
