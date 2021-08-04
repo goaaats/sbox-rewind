@@ -17,8 +17,15 @@ namespace rewind
 	public partial class RewindGame : Sandbox.Game
 	{
 		public const int MAX_TRACKED_FRAGMENTS = 5000;
+		private const float MAX_SECONDS_UNTIL_FULL_SPEED = 4f;
 
 		private static RewindMode modeInternal = RewindMode.Gameplay;
+
+		private static DateTimeOffset rewindingSince;
+
+		public static float RewindSpeedMultiplier =>
+			Math.Min((float) (DateTimeOffset.Now - rewindingSince).TotalSeconds, MAX_SECONDS_UNTIL_FULL_SPEED ) /
+			MAX_SECONDS_UNTIL_FULL_SPEED;
 
 		public static RewindMode Mode
 		{
@@ -32,6 +39,15 @@ namespace rewind
 
 		private static void NotifyStateChange( RewindMode mode )
 		{
+			if ( mode == RewindMode.Rewind )
+			{
+				rewindingSince = DateTimeOffset.Now;
+			}
+			else
+			{
+				ConsoleSystem.Run( "host_timescale", 1.0f );
+			}
+
 			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
 			{
 				entity.UpdateRewindState(mode);
@@ -60,13 +76,21 @@ namespace rewind
 			}
 		}
 
+		[Event("tick")]
+		private void Tick()
+		{
+			if ( IsClient )
+			{
+				Log.Info( "TICK" );
+				foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
+				{
+					entity.RewindSimulate();
+				}
+			}
+		}
+		
 		public override void FrameSimulate( Client cl )
 		{
-			foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
-			{
-				entity.RewindSimulate();
-			}
-
 			prevDeltaTimes[curTrackedIndex] = Time.Delta;
 			curTrackedIndex++;
 			if ( curTrackedIndex > TrackedDeltaTimes - 1 )
@@ -75,6 +99,10 @@ namespace rewind
 			DebugOverlay.ScreenText( 6, "MinCnt: " + GetMinRewindableSimulates() );
 			DebugOverlay.ScreenText( 7, $"MinSec: {GetMinRewindableSeconds():00.0} / {GetMaxRewindableSeconds():00.0} " );
 			DebugOverlay.ScreenText( 8, $"SmoothDeltaTime: {SmoothDeltaTime}" );
+			DebugOverlay.ScreenText( 9, $"RewindSpeedMultiplier: {RewindSpeedMultiplier}" );
+			
+			if (Mode == RewindMode.Rewind)
+				ConsoleSystem.Run( "host_timescale", RewindSpeedMultiplier );
 
 			base.FrameSimulate( cl );
 		}
@@ -85,6 +113,10 @@ namespace rewind
 			
 			foreach (var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>())
 			{
+				// Let's ignore entities with more fragments than our max for now, until we can sort this out
+				if ( entity.Fragments.Count > MAX_TRACKED_FRAGMENTS )
+					continue;
+				
 				if ( entity.Fragments.Count > highest )
 					highest = entity.Fragments.Count;
 			}

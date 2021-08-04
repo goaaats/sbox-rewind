@@ -26,6 +26,8 @@ namespace rewind
 				
 				Fragments.Push( frag );
 				
+				// TODO: Handle more fragments than MAX_FRAGMENT_COUNT
+				
 				DebugOverlay.Text( debugPos, 1, "Gameplay", Color.Gray );
 			}
 			else if (RewindGame.Mode == RewindMode.Rewind)
@@ -50,10 +52,10 @@ namespace rewind
 			switch (mode)
 			{
 				case RewindMode.Gameplay:
-					PhysicsEnabled = true;
+					//PhysicsEnabled = true;
 					break;
 				case RewindMode.Rewind:
-					PhysicsEnabled = false;
+					//PhysicsEnabled = false;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException( nameof(mode), mode, null );

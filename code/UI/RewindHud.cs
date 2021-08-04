@@ -23,6 +23,7 @@ namespace rewind.UI
 				tutorial.Add.Label( "Left click to shoot box" );
 				tutorial.Add.Label( "Right click to rewind" );
 				tutorial.Add.Label( "F to shoot ragdoll" );
+				tutorial.Add.Label( "E to clear" );
 			}
 		}
 	}
