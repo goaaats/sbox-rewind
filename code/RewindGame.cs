@@ -87,7 +87,7 @@ namespace rewind
 			{
 				foreach (var entity in RewindableProp.All.Where( x => x is IRewindable ).Cast<IRewindable>())
 				{
-					entity.RewindSimulate();
+					entity.RewindTick();
 				}
 			}
 		}

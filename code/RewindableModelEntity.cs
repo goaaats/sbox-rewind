@@ -13,7 +13,7 @@ namespace rewind
 
 		public Stack<RewindFragment> Fragments { get; set; } = new(RewindGame.MAX_TRACKED_FRAGMENTS + 1);
 
-		public void RewindSimulate()
+		public void RewindTick()
 		{
 			var debugPos = GetBoneTransform( 0 ).Position;
 			DebugOverlay.Text( debugPos, 0, $"Fragments: {Fragments.Count}", Color.White );

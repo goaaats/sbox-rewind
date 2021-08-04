@@ -13,7 +13,7 @@ namespace rewind
 
 		private RewindFragment lastFragment;
 
-		public void RewindSimulate()
+		public void RewindTick()
 		{
 			//DebugOverlay.Text( EyePos, 0, $"Fragments: {Fragments.Count}", Color.White );
 
