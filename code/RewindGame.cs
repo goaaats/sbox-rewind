@@ -17,15 +17,19 @@ namespace rewind
 	public partial class RewindGame : Sandbox.Game
 	{
 		public const int MAX_TRACKED_FRAGMENTS = 5000;
+		
 		private const float MAX_SECONDS_UNTIL_FULL_SPEED = 4f;
+		private const float MIN_TIMESCALE = 0.1f;
+		private const float MAX_TIMESCALE = 1.0f;
 
 		private static RewindMode modeInternal = RewindMode.Gameplay;
 
 		private static DateTimeOffset rewindingSince;
 
-		public static float RewindSpeedMultiplier =>
-			Math.Min((float) (DateTimeOffset.Now - rewindingSince).TotalSeconds, MAX_SECONDS_UNTIL_FULL_SPEED ) /
-			MAX_SECONDS_UNTIL_FULL_SPEED;
+		public static float RewindTimescale =>
+			Math.Min( MIN_TIMESCALE + Math.Min( (float)(DateTimeOffset.Now - rewindingSince).TotalSeconds,
+					MAX_SECONDS_UNTIL_FULL_SPEED ) /
+				MAX_SECONDS_UNTIL_FULL_SPEED, MAX_TIMESCALE );
 
 		public static RewindMode Mode
 		{
@@ -99,10 +103,10 @@ namespace rewind
 			DebugOverlay.ScreenText( 6, "MinCnt: " + GetMinRewindableSimulates() );
 			DebugOverlay.ScreenText( 7, $"MinSec: {GetMinRewindableSeconds():00.0} / {GetMaxRewindableSeconds():00.0} " );
 			DebugOverlay.ScreenText( 8, $"SmoothDeltaTime: {SmoothDeltaTime}" );
-			DebugOverlay.ScreenText( 9, $"RewindSpeedMultiplier: {RewindSpeedMultiplier}" );
+			DebugOverlay.ScreenText( 9, $"RewindTimescale: {RewindTimescale}" );
 			
 			if (Mode == RewindMode.Rewind)
-				ConsoleSystem.Run( "host_timescale", RewindSpeedMultiplier );
+				ConsoleSystem.Run( "host_timescale", RewindTimescale );
 
 			base.FrameSimulate( cl );
 		}
