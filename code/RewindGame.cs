@@ -1,6 +1,8 @@
 ﻿using Sandbox;
 using System;
 using System.Linq;
+using rewind.Player;
+using rewind.Rewindable;
 using rewind.UI;
 
 namespace rewind
@@ -58,7 +60,7 @@ namespace rewind
 				ConsoleSystem.Run( "host_timescale", 1.0f );
 			}
 
-			foreach ( var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>() )
+			foreach ( var entity in All.OfType<IRewindable>() )
 			{
 				entity.UpdateRewindState( mode );
 			}
@@ -69,7 +71,7 @@ namespace rewind
 		{
 			if ( IsClient )
 			{
-				foreach ( var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>() )
+				foreach ( var entity in All.OfType<IRewindable>() )
 				{
 					entity.RewindTick();
 				}
@@ -102,7 +104,7 @@ namespace rewind
 		{
 			var highest = 0;
 
-			foreach ( var entity in All.Where( x => x is IRewindable ).Cast<IRewindable>() )
+			foreach ( var entity in All.OfType<IRewindable>() )
 			{
 				// Let's ignore entities with more fragments than our max for now, until we can sort this out
 				if ( entity.Fragments.Count > MAX_TRACKED_FRAGMENTS )

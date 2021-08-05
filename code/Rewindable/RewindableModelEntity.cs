@@ -4,7 +4,7 @@ using System.Linq;
 using rewind;
 using Sandbox;
 
-namespace rewind
+namespace rewind.Rewindable
 {
 	[Library("ent_model_rewindable")]
 	public partial class RewindableModelEntity : ModelEntity, IRewindable

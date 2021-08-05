@@ -4,7 +4,7 @@ using System.Linq;
 using rewind;
 using Sandbox;
 
-namespace rewind
+namespace rewind.Rewindable
 {
 	[Library("ent_prop_rewindable")]
 	public partial class RewindableProp : Prop, IRewindable

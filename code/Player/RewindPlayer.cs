@@ -1,9 +1,10 @@
 ﻿using System.Linq;
+using rewind.Rewindable;
 using Sandbox;
 
-namespace rewind
+namespace rewind.Player
 {
-	internal class RewindPlayer : Player
+	internal class RewindPlayer : Sandbox.Player
 	{
 		public override void Respawn()
 		{

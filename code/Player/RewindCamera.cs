@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace rewind
+namespace rewind.Player
 {
 	public class RewindCamera : Camera
 	{

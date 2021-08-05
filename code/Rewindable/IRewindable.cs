@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace rewind
+namespace rewind.Rewindable
 {
 	public interface IRewindable
 	{
