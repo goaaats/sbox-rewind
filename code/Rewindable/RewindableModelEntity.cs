@@ -47,10 +47,14 @@ namespace rewind.Rewindable
 			switch ( mode )
 			{
 				case RewindMode.Gameplay:
-					//PhysicsEnabled = true;
+					PhysicsEnabled = true;
+					EnableAllCollisions = true;
+					EnableTouch = true;
 					break;
 				case RewindMode.Rewind:
-					//PhysicsEnabled = false;
+					PhysicsEnabled = false;
+					EnableAllCollisions = false;
+					EnableTouch = false;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException( nameof(mode), mode, null );
@@ -63,6 +67,8 @@ namespace rewind.Rewindable
 			EyePos = fragment.EyePos;
 			Rotation = fragment.Rotation;
 			Velocity = fragment.Velocity;
+			//LocalPosition = fragment.LocalPosition;
+			//LocalRotation = fragment.LocalRotation;
 
 			for ( var i = 0; i < fragment.Bones.Length; i++ )
 			{

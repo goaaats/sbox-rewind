@@ -151,12 +151,22 @@ namespace rewind.Player
 				Log.Info( "Gameplay..." );
 			}
 
+			if ( IsServer && Input.Pressed( InputButton.Use ) )
+			{
+				this.DeleteRewindables();
+			}
+			
 			if ( IsClient && Input.Pressed( InputButton.Use ) )
 			{
-				foreach ( var entity in All.Where( x => x is IRewindable ) )
-				{
-					entity.Delete();
-				}
+				this.DeleteRewindables();
+			}
+		}
+		
+		private void DeleteRewindables()
+		{
+			foreach ( var entity in All.Where( x => x is IRewindable ) )
+			{
+				entity.Delete();
 			}
 		}
 
