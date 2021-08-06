@@ -5,7 +5,7 @@ using Sandbox;
 namespace rewind.Player
 {
 	[Library("ent_rewind_ghost")]
-	public class RewindGhost : ModelEntity
+	public class RewindGhost : AnimEntity
 	{
 		private Stack<RewindFragment> fragments { get; set; }
 		private RewindFragment lastFragment { get; set; }
@@ -21,7 +21,7 @@ namespace rewind.Player
 			//CopyBodyGroups( living );
 
 			EnableAllCollisions = false;
-			//SetBonePhysics( false );
+			SetBonePhysics( false );
 			
 			Log.Info( "Creating ghost..." );
 		}
@@ -77,6 +77,8 @@ namespace rewind.Player
 			{
 				SetBoneTransform( i, fragment.Bones[i] );
 			}
+			
+			fragment.RestoreAnimator( this );
 		}
 	}
 }

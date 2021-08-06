@@ -195,6 +195,7 @@ namespace rewind.Player
 
 			var fragment = new RewindFragment( this );
 			fragment.SaveBones( this );
+			fragment.SaveAnimator( this );
 			
 			Fragments.Push( fragment );
 		}

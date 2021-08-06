@@ -50,7 +50,7 @@
 ]
 
 // 
-// rewind.Player.RewindGhost : Sandbox.ModelEntity 
+// rewind.Player.RewindGhost : Sandbox.AnimEntity 
 // 
 @PointClass = ent_rewind_ghost : ""
 [
