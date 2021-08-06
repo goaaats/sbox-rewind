@@ -27,6 +27,7 @@ namespace rewind.UI
 				tutorial.Add.Label( "Left click to shoot box" );
 				tutorial.Add.Label( "Right click to rewind" );
 				tutorial.Add.Label( "F to shoot ragdoll" );
+				tutorial.Add.Label( "1 to spawn 5 NPCs" );
 				tutorial.Add.Label( "E to clear" );
 
 				this.rewindPanel = RootPanel.Add.Panel( "rewindcontainer" );

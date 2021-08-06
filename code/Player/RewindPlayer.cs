@@ -128,6 +128,11 @@ namespace rewind.Player
 					ent.SetModel( "models/citizen_props/crate01.vmdl" );
 					ent.Velocity = EyeRot.Forward * 1000;
 				}
+				
+				if ( IsClient && Input.Pressed( InputButton.Slot1 ) )
+				{
+					RewindGame.SpawnDebugNpcs( 5 );
+				}
 
 				if ( IsClient && Input.Pressed( InputButton.Flashlight ) )
 				{

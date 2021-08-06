@@ -48,7 +48,8 @@ namespace rewind.Rewindable.Npc
 			{
 				var model = Rand.FromArray( new[]
 				{
-					"models/citizen_clothes/jacket/labcoat.vmdl", "models/citizen_clothes/jacket/jacket.red.vmdl",
+					//"models/citizen_clothes/jacket/labcoat.vmdl",
+					"models/citizen_clothes/jacket/jacket.red.vmdl",
 					"models/citizen_clothes/jacket/jacket.tuxedo.vmdl",
 					"models/citizen_clothes/jacket/jacket_heavy.vmdl"
 				} );
