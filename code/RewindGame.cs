@@ -81,10 +81,19 @@ namespace rewind
 			if ( mode == RewindMode.Rewind )
 			{
 				rewindingSince = DateTimeOffset.Now;
+
+				var player = Local.Pawn as RewindPlayer;
+				new RewindGhost( player.Fragments.Clone(), player );
 			}
 			else
 			{
 				ConsoleSystem.Run( "host_timescale", 1.0f );
+				
+				Log.Info( "Deleting Ghosts..." );
+				foreach (var rewindGhost in All.OfType<RewindGhost>())
+				{
+					rewindGhost.Delete();
+				}
 			}
 
 			foreach ( var entity in All.OfType<IRewindable>() )

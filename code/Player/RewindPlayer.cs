@@ -1,10 +1,13 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using rewind.Fragment;
 using rewind.Rewindable;
 using Sandbox;
 
 namespace rewind.Player
 {
-	internal class RewindPlayer : Sandbox.Player
+	internal class RewindPlayer : Sandbox.Player, IRewindable
 	{
 		public override void Respawn()
 		{
@@ -169,7 +172,7 @@ namespace rewind.Player
 		
 		private void DeleteRewindables()
 		{
-			foreach ( var entity in All.Where( x => x is IRewindable ) )
+			foreach ( var entity in All.Where( x => x is IRewindable and not RewindPlayer ) )
 			{
 				entity.Delete();
 			}
@@ -180,6 +183,34 @@ namespace rewind.Player
 			base.OnKilled();
 
 			EnableDrawing = false;
+		}
+
+		public Stack<RewindFragment> Fragments { get; set; } = new();
+		public void RewindTick()
+		{
+			if ( RewindGame.Mode != RewindMode.Gameplay )
+			{
+				return;
+			}
+
+			var fragment = new RewindFragment( this );
+			fragment.SaveBones( this );
+			
+			Fragments.Push( fragment );
+		}
+
+		public void UpdateRewindState( RewindMode mode )
+		{
+			switch ( mode )
+			{
+				case RewindMode.Gameplay:
+					Fragments.Clear();
+					break;
+				case RewindMode.Rewind:
+					break;
+				default:
+					throw new ArgumentOutOfRangeException( nameof(mode), mode, null );
+			}
 		}
 	}
 }
