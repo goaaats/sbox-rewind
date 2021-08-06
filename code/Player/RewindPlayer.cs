@@ -52,6 +52,7 @@ namespace rewind.Player
 				} );
 
 				this.pants = new ModelEntity();
+				this.pants.Tags.Add( "clothing" );
 				this.pants.SetModel( model );
 				this.pants.SetParent( this, true );
 				this.pants.EnableShadowInFirstPerson = true;
@@ -65,6 +66,7 @@ namespace rewind.Player
 				var model = Rand.FromArray( new[] {"models/citizen_clothes/jacket/labcoat.vmdl"} );
 
 				this.jacket = new ModelEntity();
+				this.jacket.Tags.Add( "clothing" );
 				this.jacket.SetModel( model );
 				this.jacket.SetParent( this, true );
 				this.jacket.EnableShadowInFirstPerson = true;
@@ -86,6 +88,7 @@ namespace rewind.Player
 				var model = Rand.FromArray( new[] {"models/citizen_clothes/shoes/trainers.vmdl"} );
 
 				this.shoes = new ModelEntity();
+				this.shoes.Tags.Add( "clothing" );
 				this.shoes.SetModel( model );
 				this.shoes.SetParent( this, true );
 				this.shoes.EnableShadowInFirstPerson = true;
@@ -106,6 +109,7 @@ namespace rewind.Player
 				} );
 
 				this.hat = new ModelEntity();
+				this.hat.Tags.Add( "clothing" );
 				this.hat.SetModel( model );
 				this.hat.SetParent( this, true );
 				this.hat.EnableShadowInFirstPerson = true;

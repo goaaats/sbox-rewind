@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using rewind.Fragment;
 using Sandbox;
 
@@ -7,23 +9,52 @@ namespace rewind.Player
 	[Library("ent_rewind_ghost")]
 	public class RewindGhost : AnimEntity
 	{
-		private Stack<RewindFragment> fragments { get; set; }
-		private RewindFragment lastFragment { get; set; }
+		private const float DefaultAlpha = 0.55f;
+
+		private Stack<RewindFragment> fragments;
+		private RewindFragment lastFragment;
+		private bool canDie;
+		private TimeSince timeSinceCanDie = 0;
 		
 		public RewindGhost( Stack<RewindFragment> fragments, ModelEntity living )
 		{
 			this.fragments = fragments;
-			
-			SetModel("models/citizen/citizen.vmdl");
-			
-			//CopyMaterialGroup( living );
-			//TakeDecalsFrom( living );
-			//CopyBodyGroups( living );
+
+			this.SetModel( "models/citizen/citizen.vmdl" );
+
+			Scale = living.Scale;
+
+			this.CopyMaterialGroup( living );
+			this.TakeDecalsFrom( living );
+			this.CopyBodyGroups( living );
 
 			EnableAllCollisions = false;
-			SetBonePhysics( false );
-			
+			this.SetBonePhysics( false );
+
+			foreach ( ModelEntity clothing in living.Children )
+			{
+				if ( !clothing.Tags.Has( "clothing" ) )
+				{
+					return;
+				}
+
+				ModelEntity nClothing = new(clothing.GetModel().Name, this);
+				nClothing.CopyMaterialGroup( clothing );
+			}
+
 			Log.Info( "Creating ghost..." );
+			
+			SetAlpha( DefaultAlpha );
+		}
+
+		private void SetAlpha( float alpha )
+		{
+			RenderAlpha = alpha;
+			
+			foreach (var ent in Children.OfType<ModelEntity>())
+			{
+				ent.RenderAlpha = alpha;
+			}
 		}
 		
 		private void SetBonePhysics(bool state)
@@ -40,13 +71,6 @@ namespace rewind.Player
 				bp.GravityEnabled = state;
 			}
 		}
-		
-		public override void Spawn()
-		{
-			RenderAlpha = 0.4f;
-			
-			base.Spawn();
-		}
 
 		[Event.Tick.Client]
 		public void Tick()
@@ -57,10 +81,30 @@ namespace rewind.Player
 
 				this.lastFragment = fragment;
 			}
-			else
+			else if (!this.canDie)
 			{
-				//this.ApplyFragment( this.lastFragment );
-				this.Delete();
+				this.canDie = true;
+				this.timeSinceCanDie = 0;
+			}
+			else if (this.canDie)
+			{
+				this.ApplyFragment( this.lastFragment );
+				
+				var alpha = Math.Clamp(1 - Math.Clamp( this.timeSinceCanDie - 2, 0, 1 ), 0, DefaultAlpha);
+				
+				DebugOverlay.Text( Position, alpha.ToString() );
+
+				if ( RenderAlpha == alpha )
+				{
+					return;
+				}
+
+				this.SetAlpha( alpha );
+
+				if ( alpha == 0 )
+				{
+					this.Delete();
+				}
 			}
 		}
 		
