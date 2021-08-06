@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using rewind;
+using rewind.Fragment;
 using Sandbox;
 
 namespace rewind.Rewindable

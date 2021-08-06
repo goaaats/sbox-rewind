@@ -1,8 +1,10 @@
 ﻿using Sandbox;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using rewind.Player;
 using rewind.Rewindable;
+using rewind.Rewindable.Npc;
 using rewind.UI;
 
 namespace rewind
@@ -46,6 +48,31 @@ namespace rewind
 			if ( IsServer )
 			{
 				new RewindHudEntity();
+			}
+
+			if ( IsClient )
+			{
+				_ = StartSecondTimer();
+			}
+		}
+
+		public async Task StartSecondTimer()
+		{
+			while (true)
+			{
+				await Task.DelaySeconds( 0.3f );
+				OnSecond();
+			}
+		}
+
+		private void OnSecond()
+		{
+			if ( IsClient )
+			{
+				foreach ( var npc in All.OfType<RewindableNpc>() )
+				{
+					RequestPath( npc.NetworkIdent, npc.Position, Local.Pawn.Position );
+				}
 			}
 		}
 

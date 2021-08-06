@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using rewind;
+using rewind.Fragment;
 using Sandbox;
 
 namespace rewind.Rewindable
@@ -44,20 +45,37 @@ namespace rewind.Rewindable
 
 		public void UpdateRewindState( RewindMode mode )
 		{
-			switch ( mode )
+			switch (mode)
 			{
 				case RewindMode.Gameplay:
-					PhysicsEnabled = true;
-					EnableAllCollisions = true;
-					EnableTouch = true;
+					SetPhysics( true );
 					break;
 				case RewindMode.Rewind:
-					PhysicsEnabled = false;
-					EnableAllCollisions = false;
-					EnableTouch = false;
+					SetPhysics( false );
 					break;
 				default:
 					throw new ArgumentOutOfRangeException( nameof(mode), mode, null );
+			}
+		}
+
+		private void SetPhysics( bool state )
+		{
+			EnableAllCollisions = state;
+			SetBonePhysics( state );
+		}
+
+		private void SetBonePhysics(bool state)
+		{
+			for ( var i = 0; i < BoneCount; i++ )
+			{
+				var bp = GetBonePhysicsBody( i );
+				if (bp == null)
+					continue;
+				
+				// Wholly disabling the bone makes it disappear visually. No clue.
+				bp.CollisionEnabled = state;
+				bp.DragEnabled = state;
+				bp.GravityEnabled = state;
 			}
 		}
 
@@ -67,12 +85,12 @@ namespace rewind.Rewindable
 			EyePos = fragment.EyePos;
 			Rotation = fragment.Rotation;
 			Velocity = fragment.Velocity;
-			//LocalPosition = fragment.LocalPosition;
-			//LocalRotation = fragment.LocalRotation;
-
-			for ( var i = 0; i < fragment.Bones.Length; i++ )
+			LocalPosition = fragment.LocalPosition;
+			LocalRotation = fragment.LocalRotation;
+			
+			for (var i = 0; i < fragment.Bones.Length; i++)
 			{
-				this.SetBoneTransform( i, fragment.Bones[i] );
+				SetBoneTransform( i, fragment.Bones[i] );
 			}
 		}
 	}

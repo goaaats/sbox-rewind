@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using rewind.Animation;
+using rewind.Fragment;
 using rewind.Rewindable.Npc.Tasks;
 using Sandbox;
 
@@ -16,6 +17,7 @@ namespace rewind.Rewindable.Npc
 		
 		private Vector3 inputVelocity;
 		private RewindFragment lastFragment;
+		private string lastSequence = null;
 
 		public override void Spawn()
 		{
@@ -33,13 +35,18 @@ namespace rewind.Rewindable.Npc
 
 			//Outfit = new Outfit(this);
 			//Outfit.ApplyOutfit();
+			
+			Log.Info( $"I'm alive! {IsClient}" );
 
 			Health = 100;
 		}
 		
-		[Event.Tick.Server]
+		[Event.Tick.Client]
 		public void Tick()
 		{
+			if ( RewindGame.Mode != RewindMode.Gameplay )
+				return;
+			
 			if (CurrentTask is not null && !CurrentTask.Completed)
 			{
 				inputVelocity = CurrentTask.CalculateInputVelocity();
@@ -49,7 +56,7 @@ namespace rewind.Rewindable.Npc
 			{
 				int chance = Rand.Int(6);
 
-				CurrentTask = chance != 1 ? 
+				CurrentTask = chance == 1 ? 
 					new WalkTask(this) :
 					new RunTask(this);
 			}
@@ -140,20 +147,29 @@ namespace rewind.Rewindable.Npc
 				if (potentialSpawn is not Vector3 spawnLocation)
 					return;
 
-				var npc = new RewindableNpc();
-				npc.Position = spawnLocation;
+				SpawnOnClient( To.Everyone, spawnLocation );
 			}
+		}
+
+		[ClientRpc]
+		public static void SpawnOnClient( Vector3 position )
+		{
+			var npc = new RewindableNpc();
+			npc.Position = position;
 		}
 		
 		public void RewindTick()
 		{
 			var debugPos = this.GetBoneTransform( 0 ).Position;
 			DebugOverlay.Text( debugPos, 0, $"Fragments: {Fragments.Count}", Color.White );
-
+			DebugOverlay.Text( debugPos, 1, $"Task: {CurrentTask?.Name}", Color.White );
+			DebugOverlay.Text( debugPos, 2, $"Sequence: {Sequence}", Color.White );
+			
 			if ( RewindGame.Mode == RewindMode.Gameplay )
 			{
 				var frag = new RewindFragment( this );
 				frag.SaveBones( this );
+				frag.SaveAnimator( this );
 
 				Fragments.Push( frag );
 
@@ -164,12 +180,14 @@ namespace rewind.Rewindable.Npc
 				if ( Fragments.TryPop( out var fragment ) )
 				{
 					this.ApplyFragment( fragment );
+					fragment.RestoreAnimator( this );
 
 					this.lastFragment = fragment;
 				}
 				else
 				{
 					this.ApplyFragment( this.lastFragment );
+					this.lastFragment.RestoreAnimator( this );
 				}
 			}
 		}
@@ -180,9 +198,16 @@ namespace rewind.Rewindable.Npc
 			{
 				case RewindMode.Gameplay:
 					//PhysicsEnabled = true;
+					//UseAnimGraph = true;
+					//Sequence = this.lastSequence;
+					//PlaybackRate = 0.3f;
 					break;
 				case RewindMode.Rewind:
 					//PhysicsEnabled = false;
+					//UseAnimGraph = false;
+					//PlaybackRate = 0f;
+					//this.lastSequence = Sequence;
+					//Sequence = null;
 					break;
 				default:
 					throw new ArgumentOutOfRangeException( nameof(mode), mode, null );
@@ -197,6 +222,7 @@ namespace rewind.Rewindable.Npc
 			Velocity = fragment.Velocity;
 			LocalPosition = fragment.LocalPosition;
 			LocalRotation = fragment.LocalRotation;
+			Sequence = fragment.Sequence;
 
 			for ( var i = 0; i < fragment.Bones.Length; i++ )
 			{

@@ -8,6 +8,6 @@
 		}
 		
 		public override string Name => "Running";
-		public override float Speed => 320;
+		public override float Speed => 300;
 	}
 }

@@ -12,31 +12,38 @@ namespace rewind.Rewindable.Npc.Tasks
 		public List<Vector3> Points { get; set; }
 
 		public WalkTask(RewindableNpc owner) : base(owner) {
-			int distMult = Rand.Int(0, 3);
-			Vector3? attemptedDest = NavMesh.GetPointWithinRadius(Owner.Position, 250 * distMult, 1000 * distMult);
-
-			if(attemptedDest is not Vector3 dest)
-			{
-				Completed = true;
-				return;
-			}
-
-			Vector3? closestPoint = NavMesh.GetClosestPoint(Owner.Position);
-			Vector3[] rawPoints = NavMesh.BuildPath(closestPoint.Value, dest);
+			//Log.Info( $"WalkTask::ctor {NavMesh.IsLoaded}" );
 			
-			if (rawPoints is null)
-			{
-				Completed = true;
-				return;
-			}
+			//int distMult = Rand.Int(0, 3);
+			//Vector3? attemptedDest = RewindGame.GetPointWithinRadius(Owner.Position, 250 * distMult, 1000 * distMult);
 
-			Points = rawPoints.ToList();
+			//if(attemptedDest is not Vector3 dest)
+			//{
+			//	Completed = true;
+			//	return;
+			//}
+
+			//Vector3? closestPoint = RewindGame.GetClosestPoint(Owner.Position);
+			//Vector3[] rawPoints = RewindGame.BuildPath(closestPoint.Value, dest);
+			
+			//if (rawPoints is null)
+			//{
+			//	Completed = true;
+			//	return;
+			//}
+
+			//Points = rawPoints.ToList();
 		}
 
 		TimeSince stuckFor = 0;
 
 		public override Vector3 CalculateInputVelocity()
 		{
+			//Log.Info( "WalkTask::CalculateInputVelocity()" );
+
+			if ( Points == null )
+				return Vector3.Zero;
+			
 			Vector3 currentTarget = Points[Points.Count - 1];
 
 			if (Owner.Velocity.Length < 100)
