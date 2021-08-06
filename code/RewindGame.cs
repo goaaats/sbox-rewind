@@ -92,7 +92,7 @@ namespace rewind
 				Log.Info( "Deleting Ghosts..." );
 				foreach (var rewindGhost in All.OfType<RewindGhost>())
 				{
-					rewindGhost.Delete();
+					rewindGhost.MarkDelete();
 				}
 			}
 

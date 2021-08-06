@@ -13,7 +13,8 @@ namespace rewind.Player
 
 		private Stack<RewindFragment> fragments;
 		private RewindFragment lastFragment;
-		private bool canDie;
+		
+		public bool canDie;
 		private TimeSince timeSinceCanDie = 0;
 		
 		public RewindGhost( Stack<RewindFragment> fragments, ModelEntity living )
@@ -72,27 +73,23 @@ namespace rewind.Player
 			}
 		}
 
-		[Event.Tick.Client]
-		public void Tick()
+		public void MarkDelete()
 		{
-			if ( this.fragments.TryPop( out var fragment ) )
-			{
-				this.ApplyFragment( fragment );
-
-				this.lastFragment = fragment;
-			}
-			else if (!this.canDie)
+			if ( !this.canDie )
 			{
 				this.canDie = true;
 				this.timeSinceCanDie = 0;
 			}
-			else if (this.canDie)
+		}
+
+		[Event.Tick.Client]
+		public void Tick()
+		{
+			if ( this.canDie )
 			{
 				this.ApplyFragment( this.lastFragment );
-				
-				var alpha = Math.Clamp(1 - Math.Clamp( this.timeSinceCanDie - 2, 0, 1 ), 0, DefaultAlpha);
-				
-				DebugOverlay.Text( Position, alpha.ToString() );
+
+				var alpha = Math.Clamp(1 - ( this.timeSinceCanDie / 1.0f ), 0, DefaultAlpha);
 
 				if ( RenderAlpha == alpha )
 				{
@@ -101,10 +98,23 @@ namespace rewind.Player
 
 				this.SetAlpha( alpha );
 
-				if ( alpha == 0 )
+				if ( alpha <= 0 )
 				{
 					this.Delete();
 				}
+
+				return;
+			}
+			
+			if ( this.fragments.TryPop( out var fragment ) )
+			{
+				this.ApplyFragment( fragment );
+
+				this.lastFragment = fragment;
+			}
+			else if (!this.canDie)
+			{
+				this.MarkDelete();
 			}
 		}
 		
@@ -116,10 +126,13 @@ namespace rewind.Player
 			Velocity = fragment.Velocity;
 			LocalPosition = fragment.LocalPosition;
 			LocalRotation = fragment.LocalRotation;
-			
-			for (var i = 0; i < fragment.Bones.Length; i++)
+
+			if ( fragment.Bones != null )
 			{
-				SetBoneTransform( i, fragment.Bones[i] );
+				for (var i = 0; i < fragment.Bones.Length; i++)
+				{
+					SetBoneTransform( i, fragment.Bones[i] );
+				}
 			}
 			
 			fragment.RestoreAnimator( this );
