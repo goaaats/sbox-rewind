@@ -15,7 +15,7 @@ namespace rewind
 		{
 			Host.AssertServer();
 			
-			Log.Info( $"RequestPath for {entId}" );
+			//Log.Info( $"RequestPath for {entId}" );
 			ReportPathToNpc( entId, NavMesh.BuildPath( startPos, endPos ) );
 		}
 		
@@ -28,7 +28,7 @@ namespace rewind
 			
 			if ( ent is {CurrentTask: WalkTask t} && path != null )
 			{
-				Log.Info( $"ReportPathToNpc for {entId}: Set {path.Length} points" );
+				//Log.Info( $"ReportPathToNpc for {entId}: Set {path.Length} points" );
 				
 				t.Points = path.ToList();
 			}

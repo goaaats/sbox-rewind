@@ -33,10 +33,7 @@ namespace rewind.Rewindable.Npc
 			MoveType = MoveType.MOVETYPE_WALK;
 			EnableHitboxes = true;
 
-			//Outfit = new Outfit(this);
-			//Outfit.ApplyOutfit();
-			
-			Log.Info( $"I'm alive! {IsClient}" );
+			DressUp();
 
 			Health = 100;
 		}
