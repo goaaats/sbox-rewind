@@ -157,10 +157,12 @@ namespace rewind.Rewindable.Npc
 		
 		public void RewindTick()
 		{
+#if INDEV
 			var debugPos = this.GetBoneTransform( 0 ).Position;
 			DebugOverlay.Text( debugPos, 0, $"Fragments: {Fragments.Count}", Color.White );
 			DebugOverlay.Text( debugPos, 1, $"Task: {CurrentTask?.Name}", Color.White );
 			DebugOverlay.Text( debugPos, 2, $"Sequence: {Sequence}", Color.White );
+#endif
 			
 			if ( RewindGame.Mode == RewindMode.Gameplay )
 			{

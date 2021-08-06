@@ -14,7 +14,7 @@ namespace rewind.Player
 		private Stack<RewindFragment> fragments;
 		private RewindFragment lastFragment;
 		
-		public bool canDie;
+		private bool canDie;
 		private TimeSince timeSinceCanDie = 0;
 		
 		public RewindGhost( Stack<RewindFragment> fragments, ModelEntity living )
