@@ -7,6 +7,8 @@ using rewind.Rewindable;
 using rewind.Rewindable.Npc;
 using rewind.UI;
 
+//#define INDEV
+
 namespace rewind
 {
 	[Library]
@@ -123,11 +125,14 @@ namespace rewind
 				curTrackedIndex = 0;
 			}
 
+#if INDEV
 			DebugOverlay.ScreenText( 6, "MinCnt: " + GetMinRewindableSimulates() );
 			DebugOverlay.ScreenText( 7, $"MinSec: {GetMinRewindableSeconds():00.0} / {GetMaxRewindableSeconds():00.0} " );
 			DebugOverlay.ScreenText( 8, $"SmoothDeltaTime: {SmoothDeltaTime}" );
 			DebugOverlay.ScreenText( 9, $"RewindTimescale: {RewindTimescale}" );
 
+#endif
+			
 			if ( Mode == RewindMode.Rewind )
 			{
 				ConsoleSystem.Run( "host_timescale", RewindTimescale );
