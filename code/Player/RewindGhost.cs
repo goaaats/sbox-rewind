@@ -25,22 +25,27 @@ namespace rewind.Player
 
 			Scale = living.Scale;
 
+			this.CopyBonesFrom( living );
+			this.CopyBodyGroups( living );
 			this.CopyMaterialGroup( living );
 			this.TakeDecalsFrom( living );
-			this.CopyBodyGroups( living );
 
 			EnableAllCollisions = false;
 			this.SetBonePhysics( false );
 
-			foreach ( ModelEntity clothing in living.Children )
+			foreach ( var child in living.Children )
 			{
-				if ( !clothing.Tags.Has( "clothing" ) )
-				{
-					return;
-				}
+				if ( !child.Tags.Has( "clothes" ) ) continue;
+				if ( child is not ModelEntity e ) continue;
 
-				ModelEntity nClothing = new(clothing.GetModel().Name, this);
-				nClothing.CopyMaterialGroup( clothing );
+				var model = e.GetModelName();
+
+				var clothing = new ModelEntity();
+				clothing.SetModel( model );
+				clothing.SetParent( this, true );
+				clothing.RenderColor = e.RenderColor;
+				clothing.CopyBodyGroups( e );
+				clothing.CopyMaterialGroup( e );
 			}
 
 			Log.Info( "Creating ghost..." );
@@ -50,11 +55,11 @@ namespace rewind.Player
 
 		private void SetAlpha( float alpha )
 		{
-			RenderAlpha = alpha;
+			RenderColor = Color.White.WithAlpha( alpha );
 			
 			foreach (var ent in Children.OfType<ModelEntity>())
 			{
-				ent.RenderAlpha = alpha;
+				ent.RenderColor = Color.White.WithAlpha( alpha );
 			}
 		}
 		

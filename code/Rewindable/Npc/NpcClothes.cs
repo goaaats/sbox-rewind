@@ -11,6 +11,8 @@ namespace rewind.Rewindable.Npc
 
 		private bool dressed;
 
+		private Clothing.Container container = new();
+
 		private void DressUp()
 		{
 			if ( this.dressed )
@@ -60,9 +62,9 @@ namespace rewind.Rewindable.Npc
 				this.jacket.EnableHideInFirstPerson = true;
 
 				var propInfo = this.jacket.GetModel().GetPropData();
-				if ( propInfo.ParentBodyGroupName != null )
+				if ( propInfo.ParentBodygroupName != null )
 				{
-					this.SetBodyGroup( propInfo.ParentBodyGroupName, propInfo.ParentBodyGroupValue );
+					this.SetBodyGroup( propInfo.ParentBodygroupValue, propInfo.ParentBodygroupValue );
 				}
 				else
 				{

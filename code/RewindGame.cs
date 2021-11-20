@@ -177,7 +177,7 @@ namespace rewind
 		{
 			base.ClientJoined( client );
 
-			var player = new RewindPlayer();
+			var player = new RewindPlayer( client );
 			client.Pawn = player;
 
 			player.Respawn();
